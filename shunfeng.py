@@ -28,11 +28,13 @@ for i in range(nrows ):
 print(dingdan)
 
 time.sleep(2)
+# 打开网页，先加载资源，如果网络不好的可以把上面的2换大点
 ef_driver.find_element_by_class_name("token-input").send_keys(dingdan)
 time.sleep(0.3)
+# 程序从excel读取订单号粘贴进来
 driver.find_element_by_id("queryBill").click()
 time.sleep(8)
-# 输入验证码
+# 8秒的时间来输入验证码，如果太短可以把8换大点
 
 # 打开所有的栏目
 openlist = driver.find_elements_by_class_name("open")
@@ -55,18 +57,19 @@ for i in range(len(deliveryList)):
     print("\n订单号：" + deliveryList[i].find_elements_by_class_name("number")[0].text)
     with open(filename, 'a') as fileobject:  # 使用‘a’来提醒python用附加模式的方式打开
         fileobject.write("\n\n订单号：" + deliveryList[i].find_elements_by_class_name("number")[0].text)
-    datelist = deliveryList[i].find_elements_by_class_name("status-update-box")
+    datelist = deliveryList[i].find_elements_by_class_name("route")
     for j in range(len(datelist)):
-        print(datelist[j].find_elements_by_class_name('status-update-tab')[0].text)
+        print("\n状态："+datelist[j].find_elements_by_class_name('route-status-text')[0].find_elements_by_xpath('span')[0].text)
+        print("\n时间："+datelist[j].find_elements_by_class_name('route-date-time')[0].find_elements_by_xpath('span')[0].text)
+        print("\n详情："+datelist[j].find_elements_by_class_name('route-desc')[0].find_elements_by_xpath('span')[0].text)
         with open(filename, 'a') as fileobject:  # 使用‘a’来提醒python用附加模式的方式打开
-            fileobject.write("\n  "+datelist[j].find_elements_by_class_name('status-update-tab')[0].text)
-        timelist = datelist[j].find_elements_by_class_name("status-update")
-        for m in range(len(timelist)):
-            newlist = timelist[m].find_elements_by_xpath('td')
-            print(newlist[0].text,newlist[1].text)
-            with open(filename, 'a') as fileobject:  # 使用‘a’来提醒python用附加模式的方式打开
-                fileobject.write("\n    "+newlist[0].text + "  " + newlist[1].text)
+            fileobject.write("\n  "+datelist[j].find_elements_by_class_name('route-status-text')[0].find_elements_by_xpath('span')[0].text)
+        with open(filename, 'a') as fileobject:  # 使用‘a’来提醒python用附加模式的方式打开 
+            fileobject.write("  "+datelist[j].find_elements_by_class_name('route-date-time')[0].find_elements_by_xpath('span')[0].text)
+        with open(filename, 'a') as fileobject:  # 使用‘a’来提醒python用附加模式的方式打开
+            fileobject.write("  "+datelist[j].find_elements_by_class_name('route-desc')[0].find_elements_by_xpath('span')[0].text)
+
 
 
 # 关闭浏览器
-ef_driver.close()
+# ef_driver.close()
